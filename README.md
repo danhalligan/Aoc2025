@@ -34,7 +34,7 @@ The `Puzzle` class provides an interface for working with Advent of Code puzzles
 from aoc2025.aoc import Puzzle
 
 # Create puzzle for today's date
-puzzle = Puzzle.today()
+puzzle = Puzzle()
 
 # Create puzzle for a specific day
 puzzle = Puzzle(day=1)
@@ -56,10 +56,10 @@ lines = data.lines()                    # List of lines
 numbers = data.grep_ints()             # Extract all integers
 per_line_nums = data.grep_ints(per_line=True)  # Integers per line
 int_matrix = data.int_array()          # 2D array of integers
-char_grid = data.char_grid()           # Character grid with complex coordinates
+char_matrix = data.char_array()        # 2D array of characters
+grid = data.grid()                     # Grid with complex coordinates (default: str)
+int_grid = data.grid(int)              # Grid with integer values
 sections = data.sections()             # Split on double newlines
-words = data.words()                   # Split into words
-chars = data.chars()                   # All characters as list
 ```
 
 ### Grid Operations
@@ -67,7 +67,7 @@ chars = data.chars()                   # All characters as list
 For 2D grid puzzles, use complex numbers as coordinates:
 
 ```python
-grid = data.char_grid()  # Returns Dict[complex, str]
+grid = data.grid()  # Returns Dict[complex, str] by default
 
 # Access grid positions
 top_left = grid[0+0j]
@@ -100,23 +100,7 @@ puzzle.test_part("b", part2)
 puzzle.test(a=part1, b=part2)
 ```
 
-### Complete Workflow
-
-Use the integrated solve-and-submit workflow:
-
-```python
-# This will:
-# 1. Test against examples first
-# 2. Run on real input
-# 3. Ask for confirmation before submitting
-puzzle.solve_and_submit(
-    part_a=part1, 
-    part_b=part2,
-    test_first=True  # Default: True
-)
-```
-
-### Manual Submission
+### Submission
 
 For manual control over submission:
 
@@ -137,18 +121,13 @@ puzzle.submit(a=answer_a, b=answer_b)
 ```python
 # Get puzzle information
 puzzle.title()           # Puzzle title
-puzzle.url()             # Direct link to puzzle
-puzzle.stats()           # Comprehensive stats
 
 # Check availability
 if puzzle.available():
     print("Puzzle is available!")
 else:
-    time_left = puzzle.time_until_unlock()
-    print(f"Unlocks in: {time_left}")
-
-# Get latest available puzzle
-latest = Puzzle.latest_available()
+    unlock_time = puzzle.unlock_time()
+    print(f"Unlocks at: {unlock_time}")
 ```
 
 ### Working with Examples
@@ -156,17 +135,41 @@ latest = Puzzle.latest_available()
 The system automatically loads and manages example data:
 
 ```python
-# Check number of examples
-print(f"Examples available: {puzzle.examples.count()}")
-
 # Access specific example
 example = puzzle.examples.data(1)  # 1-indexed
 
 # Test all examples manually
-for i in range(1, puzzle.examples.count() + 1):
-    example_data = puzzle.data(example=i)
-    result = solve_part1(example_data)
-    print(f"Example {i}: {result}")
+if puzzle.examples.examples:  # Check if examples are loaded
+    for i in range(1, len(puzzle.examples.examples) + 1):
+        example_data = puzzle.data(example=i)
+        result = part1(example_data)
+        print(f"Example {i}: {result}")
+```
+
+### Error Handling
+
+The system provides helpful error messages:
+
+```python
+try:
+    puzzle = Puzzle(day=15)  # Future day
+except DateException as e:
+    print(f"Puzzle not available: {e}")
+```
+
+### Advanced Data Parsing
+
+```python
+# Custom separator for int arrays
+int_matrix = data.int_array(separator=',')
+
+# Custom grid with integer values
+int_grid = data.grid(int)
+
+# Work with input sections
+sections = data.sections()
+header = sections[0]
+body = sections[1]
 ```
 
 ### Example Complete Solution
@@ -184,7 +187,17 @@ def part2(data):
 
 # Create puzzle and solve
 puzzle = Puzzle(day=1)
-puzzle.solve_and_submit(part_a=part1, part_b=part2)
+
+# Test with examples
+puzzle.test(a=part1, b=part2)
+
+# Run on real data
+data = puzzle.data()
+answer1 = part1(data)
+answer2 = part2(data)
+
+# Submit answers
+puzzle.submit(a=answer1, b=answer2)
 ```
 
 [Advent of Code 2025]: https://adventofcode.com/2025
