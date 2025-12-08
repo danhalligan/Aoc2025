@@ -32,4 +32,3 @@ def part_b(data):
                 g[pt] = "."
         removed += count
     return removed
- 
