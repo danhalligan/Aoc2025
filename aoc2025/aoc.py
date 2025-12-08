@@ -45,9 +45,13 @@ class Data:
         else:
             return ints(self.raw)
 
-    def int_array(self) -> List[List[int]]:
+    def int_array(self, separator=None) -> List[List[int]]:
         """Parse input as 2D array of integers"""
-        return [[*map(int, line.split())] for line in self.lines()]
+        return [[*map(int, line.split(separator))] for line in self.lines()]
+
+    def char_array(self) -> List[List[str]]:
+        """Parse input as 2D array of characters (useful if you need mutability)"""
+        return [list(line) for line in self.lines()]
 
     def grid(self, vtype: Callable[[str], Any] = str) -> Dict[complex, Any]:
         """

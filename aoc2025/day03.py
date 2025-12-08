@@ -14,7 +14,7 @@ def part_a(data):
 
 
 def find_max(x, n):
-    """Find the maximum number that can be formed by selecting n+1 digits from x in order."""
+    """Maximum number that can be formed by selecting n+1 digits from x in order."""
     if n == 0:
         return max(x)
     else:
