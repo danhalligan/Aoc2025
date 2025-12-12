@@ -3,13 +3,7 @@ def part_a(data):
     for line in data.lines():
         x = [int(i) for i in line]
         m = max(x[:-1])
-        best = 0
-        for p, i in enumerate(x[:-1]):
-            if i == m:
-                r = int(str(i) + str(max(x[p + 1 :])))
-                if r >= best:
-                    best = r
-        tot += best
+        tot += int(f"{m}{max(x[x.index(m) + 1 :])}")
     return tot
 
 
@@ -17,19 +11,9 @@ def find_max(x, n):
     """Maximum number that can be formed by selecting n+1 digits from x in order."""
     if n == 0:
         return max(x)
-    else:
-        m = max(x[:-n])
-        best = 0
-        for i, p in enumerate(x[:-n]):
-            if p == m:
-                r = find_max(x[i + 1 :], n - 1)
-                if r > best:
-                    best = r
-        return int(str(m) + str(best))
+    m = max(x[:-n])
+    return int(f"{m}{find_max(x[x.index(m) + 1:], n - 1)}")
 
 
 def part_b(data):
-    tot = 0
-    for line in data.lines():
-        tot += find_max([int(i) for i in line], 11)
-    return tot
+    return sum(find_max([int(i) for i in line], 11) for line in data.lines())

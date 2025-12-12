@@ -43,17 +43,14 @@ def n_paths_top(adj, src, dest):
 
 def part_b(data):
     g = parse(data)
-    print(g)
     path1 = (
         n_paths_top(g, "svr", "dac")
         * n_paths_top(g, "dac", "fft")
         * n_paths_top(g, "fft", "out")
     )
-    print(path1)
     path2 = (
         n_paths_top(g, "svr", "fft")
         * n_paths_top(g, "fft", "dac")
         * n_paths_top(g, "dac", "out")
     )
-    print(f"total: {path1} + {path2}")
     return path1 + path2

@@ -1,4 +1,3 @@
-from aoc2025.aoc import Puzzle
 from itertools import combinations, pairwise
 
 

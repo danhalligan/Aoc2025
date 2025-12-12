@@ -9,12 +9,6 @@ def part_a(data):
     return tot
 
 
-def chunks(lst, n):
-    """Yield successive n-sized chunks from lst."""
-    for i in range(0, len(lst), n):
-        yield lst[i : i + n]
-
-
 def part_b(data):
     tot = 0
     for ids in data.raw.split(","):
@@ -22,10 +16,9 @@ def part_b(data):
         for i in range(s, e + 1):
             x = str(i)
             for pattern_length in range(1, len(x) // 2 + 1):
-                if len(x) % pattern_length != 0:
-                    continue
-                patterns = list(chunks(x, pattern_length))
-                if all(c == patterns[0] for c in patterns):
-                    tot += i
-                    break
+                if len(x) % pattern_length == 0:
+                    pattern = x[:pattern_length]
+                    if x == pattern * (len(x) // pattern_length):
+                        tot += i
+                        break
     return tot

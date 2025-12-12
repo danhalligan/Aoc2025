@@ -1,34 +1,24 @@
 def nbs(pt):
-    return [
-        pt + 1,
-        pt - 1,
-        pt + 1j,
-        pt - 1j,
-        pt + 1 + 1j,
-        pt + 1 - 1j,
-        pt - 1 + 1j,
-        pt - 1 - 1j,
-    ]
+    return [pt + dx + dy * 1j for dx in [-1, 0, 1] for dy in [-1, 0, 1] if dx or dy]
+
+
+def accessible(g, pt):
+    return g[pt] == "@" and sum(g.get(n, ".") == "@" for n in nbs(pt)) < 4
 
 
 def part_a(data):
     g = data.grid()
-    count = 0
-    for pt in g.keys():
-        if sum(g.get(n, ".") == "@" for n in nbs(pt)) < 4 and g[pt] == "@":
-            count += 1
-    return count
+    return sum(accessible(g, pt) for pt in g)
 
 
 def part_b(data):
     g = data.grid()
     removed = 0
-    count = 1
-    while count > 0:
-        count = 0
-        for pt in g.keys():
-            if sum(g.get(n, ".") == "@" for n in nbs(pt)) < 4 and g[pt] == "@":
-                count += 1
-                g[pt] = "."
-        removed += count
+    while True:
+        rm = [pt for pt in g if accessible(g, pt)]
+        if not rm:
+            break
+        for pt in rm:
+            g[pt] = "."
+        removed += len(rm)
     return removed
